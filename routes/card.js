@@ -1,8 +1,9 @@
 const {Router} = require('express');
 const Course = require('../models/course');
 const router = Router();
-const User = require('../models/user');
+//const User = require('../models/user');
 const auth = require('../middleware/auth');
+//const user = require('../middleware/user');
 
 function mapCartItems(cart) {
     return cart.items.map(c => ({
@@ -18,7 +19,7 @@ function computePrice(courses) {
     }, 0);
 }
 
-router.post('/add', auth, async(req, res) => {
+router.post('/add', auth, async (req, res) => {
     const course = await Course.findById(req.body.id);
     await req.user.addToCart(course);
     res.redirect('/card');

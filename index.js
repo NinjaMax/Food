@@ -16,19 +16,20 @@ const ordersRoutes = require('./routes/orders');
 const varMiddleware = require('./middleware/variables');
 const userMiddleware = require('./middleware/user');
 const authRoutes = require('./routes/auth');
+const keys = require('./keys');
 
 const app = express();
-const MONGODB_URI = 'mongodb+srv://Max:wquJbgh3*rrV_7N@cluster0.zkp1e.mongodb.net/Shop';
 
 const hbs = exphbs.create({
     defaultLayout: 'main',
     extname: 'hbs',
+    helpers: require('./utils/hbs-helpers'),
     handlebars: allowInsecurePrototypeAccess(Handlebars)
 });
 
 const store = new MongoStore({
     collection: 'session',
-    uri: MONGODB_URI
+    uri: keys.MONGODB_URI
 });
 
 
@@ -53,7 +54,7 @@ app.set('views', 'views');
 app.use(express.static(path.join(__dirname,'public')));
 app.use(express.urlencoded({extended: true}));
 app.use(session({
-    secret: 'some secret value',
+    secret: keys.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store
@@ -86,7 +87,7 @@ const PORT = process.env.PORT || 3000;
 async function start() {
 try {       
     
-    await mongoose.connect(MONGODB_URI, {useNewUrlParser: true});
+    await mongoose.connect(keys.MONGODB_URI, {useNewUrlParser: true});
 
     // const candidate = await User.findOne();
     // if(!candidate) {
